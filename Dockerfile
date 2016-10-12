@@ -37,7 +37,7 @@ ADD extra_packages /root/extra_packages
 RUN dpkg -i /root/extra_packages/automake_1.13.2-1ubuntu1_all.deb && \
  apt-get install -y net-tools vim ctags
 RUN rm -rf /root/extra_packages
-RUN apt-get autoclean -y && apt-get autoremove -y
+# RUN apt-get autoclean -y && apt-get autoremove -y
 
 
 ### make /bin/sh symlink to bash instead of dash
