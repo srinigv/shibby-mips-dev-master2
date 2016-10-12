@@ -1,14 +1,15 @@
 FROM debian:wheezy-backports
+
+### upgrade to latest and install SSH
 ENV DEBIAN_FRONTEND noninteractive
 RUN dpkg --add-architecture i386
-
-RUN echo "===> running apt update upgrade and installing openssh-server..." && \
- apt-get update && \
+RUN apt-get update && \
  apt-get upgrade -y && \
  apt-get install -y openssh-server
 
-RUN echo "===> enabling ssh..." && \
- mkdir /var/run/sshd && \
+
+### config SSH
+RUN mkdir /var/run/sshd && \
  echo 'root:shibby' | chpasswd && \
  sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
  sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd
@@ -17,8 +18,10 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
 
-RUN echo "===> installing tomatousb build essentials..." && \
- apt-get install -y build-essential wget apt-utils locales && \
+
+### install tomatousb build essentials
+RUN \
+ apt-get install -y build-essential curl wget apt-utils locales && \
  apt-get install -y autoconf git-core libncurses5 libncurses5-dev m4 \
   bison flex libstdc++6-4.4-dev g++-4.4 g++ libtool sqlite gcc binutils \
   patch bzip2 make gettext unzip zlib1g-dev libc6 gperf sudo \
@@ -34,16 +37,16 @@ ADD extra_packages /root/extra_packages
 RUN dpkg -i /root/extra_packages/automake_1.13.2-1ubuntu1_all.deb && \
  apt-get install -y net-tools vim ctags
 RUN rm -rf /root/extra_packages
+RUN apt-get autoclean -y && apt-get autoremove -y
 
-# RUN apt-get autoclean -y && apt-get autoremove -y
 
-# make /bin/sh symlink to bash instead of dash
-RUN echo "===> enabling bash as default..." && \
- echo "dash dash/sh boolean false" | debconf-set-selections && \
+### make /bin/sh symlink to bash instead of dash
+RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
-RUN echo "===> locale config..." && \
- dpkg-reconfigure locales && \
+
+### locale settings
+RUN dpkg-reconfigure locales && \
  locale-gen C.UTF-8 && \
  /usr/sbin/update-locale LANG=C.UTF-8 && \
  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
@@ -52,13 +55,14 @@ ENV LC_ALL C.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-# UTC timezone
-RUN echo "===> setting UTC timezone..." && \
- echo "UTC" > /etc/timezone && \
+
+### UTC timezone
+RUN echo "UTC" > /etc/timezone && \
  dpkg-reconfigure -f noninteractive tzdata
 
-RUN echo "===> adding tomato user and utils..." && \
- useradd -ms /bin/bash tomato && \
+
+### tomato user and utils for tomatousb repo
+RUN useradd -ms /bin/bash tomato && \
  echo 'tomato:shibby' | chpasswd && \
  adduser tomato sudo
 ADD get_shibby.sh /bin/
