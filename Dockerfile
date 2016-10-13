@@ -24,7 +24,7 @@ RUN \
  apt-get install -y build-essential curl wget apt-utils locales && \
  apt-get install -y autoconf git-core libncurses5 libncurses5-dev m4 \
   bison flex libstdc++6-4.4-dev g++-4.4 g++ libtool sqlite gcc binutils \
-  patch bzip2 make gettext unzip zlib1g-dev libc6 gperf sudo \
+  patch bzip2 make gettext unzip zlib1g-dev libc6 gperf sudo subversion \
   automake automake1.9 lib32stdc++6 gawk g++-4.4-multilib git gitk \
   autopoint shtool autogen mtd-utils gcc-multilib gconf-editor \
   lib32z1-dev pkg-config libssl-dev libxml2-dev libelf1:i386 \
@@ -34,7 +34,7 @@ RUN \
   autoconf2.13 autoconf-archive gnu-standards groff texlive nettle-dev
 WORKDIR /root
 ADD extra_packages /root/extra_packages
-RUN dpkg -i /root/extra_packages/automake_1.13.2-1ubuntu1_all.deb && \
+RUN dpkg -i /root/extra_packages/automake_1.15-4_all.deb && \
  apt-get install -y net-tools vim ctags
 RUN rm -rf /root/extra_packages
 RUN apt-get autoclean -y && apt-get autoremove -y
