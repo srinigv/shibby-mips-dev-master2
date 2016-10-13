@@ -22,12 +22,12 @@ CMD ["/usr/sbin/sshd", "-D"]
 ### install tomatousb build essentials
 RUN \
  apt-get install -y build-essential curl wget apt-utils locales && \
- apt-get install -y autoconf git-core libncurses5 libncurses5-dev m4 \
-  bison flex libstdc++6-4.4-dev g++-4.4 g++ libtool sqlite gcc binutils \
+ apt-get install -y autoconf git-core libncurses5 libncurses5-dev m4 gcc \
+  bison libstdc++6-4.4-dev g++-4.4 g++ g++-4.4-multilib libtool binutils \
   patch bzip2 make gettext unzip zlib1g-dev libc6 gperf sudo subversion \
-  automake automake1.9 lib32stdc++6 gawk g++-4.4-multilib git gitk \
-  autopoint shtool autogen mtd-utils gcc-multilib gconf-editor \
-  lib32z1-dev pkg-config libssl-dev libxml2-dev libelf1:i386 \
+  automake automake1.4 automake1.9 automake1.10 lib32stdc++6 gawk flex \
+  autopoint shtool autogen mtd-utils gcc-multilib gconf-editor sqlite \
+  lib32z1-dev pkg-config libssl-dev libxml2-dev libelf1:i386 git gitk \
   intltool libglib2.0-dev libstdc++5 texinfo dos2unix xsltproc \
   libnfnetlink0 libcurl4-openssl-dev libgtk2.0-dev libnotify-dev \
   libevent-dev mc re2c mlocate libglib2.0-data:i386 shared-mime-info:i386 \
